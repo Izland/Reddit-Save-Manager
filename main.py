@@ -77,6 +77,7 @@ def main():
 
         'create' : lambda: reddit_database.create_table(get_saved_posts()),
         'print' : lambda: reddit_database.display_table(),
+        'search' : lambda: reddit_database.search_table(),
         'update' : lambda: reddit_database.update_table(get_saved_posts())
     }
 

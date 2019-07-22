@@ -50,10 +50,6 @@ def create_table(reddit_post_data):
         else:
             write_new_table(reddit_post_data)
 
-
-
-        
-
     except Exception as e:
         print(e)
 
@@ -69,7 +65,7 @@ def display_table():
     print(cursor.fetchall())
 
 def search_table():
-    search_fields = ('num_id', 'saved_type', 'title', 'link', 'subreddit', 'full_name', 'post_time', 'epoch_time')
+    search_fields = ('num_id', 'reddit_data_type', 'title', 'reddit_link', 'subreddit', 'full_name', 'post_time', 'epoch_time')
     search_field_query = ''
     while search_field_query not in search_fields:
         search_field_query = input('What field are you searching for? ')
@@ -81,20 +77,12 @@ def search_table():
             print('Data field not in database. Type "exit" to cancel search')
 
         else:
-            search_query = '%' + input('What are you searching for? ') + '%'
-
-            search_queries = (search_field_query, search_query)
+            search_query = input('What are you searching for? ').strip()
+            database_query = '%' + search_query + '%'
             cursor = get_cursor()
+            cursor.execute(f'SELECT * FROM posts WHERE {search_field_query}  LIKE ?', (database_query,))
 
-            cursor.execute('SELECT * FROM posts WHERE ? LIKE ?', search_queries)
-
- 
-    
-
-        
-
-    
-
+            print(cursor.fetchall())
 
 def update_table(reddit_post_data):
 
