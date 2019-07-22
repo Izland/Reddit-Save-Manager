@@ -1,2 +1,3 @@
-credentials.ini
 *.db
+*.pyc
+credentials.ini
