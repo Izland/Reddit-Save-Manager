@@ -81,9 +81,12 @@ def search_table():
             print('Data field not in database. Type "exit" to cancel search')
 
         else:
-            search_query = input('What are you searching for? ')
+            search_query = '%' + input('What are you searching for? ') + '%'
 
-            db = sqlite3.connect('redd')
+            search_queries = (search_field_query, search_query)
+            cursor = get_cursor()
+
+            cursor.execute('SELECT * FROM posts WHERE ? LIKE ?', search_queries)
 
  
     
@@ -127,8 +130,6 @@ def write_new_table(reddit_post_data):
 
 
 #backup_table
-
-#search_table
 
 #sync_table
 
