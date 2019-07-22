@@ -2,6 +2,12 @@ import sqlite3
 from sqlite3 import Error
 import os
 
+def get_cursor():
+    db = sqlite3.connect('reddit_data.db')
+    cursor = db.cursor()
+
+    return cursor
+
 def get_db_and_cursor():
     db = sqlite3.connect('reddit_data.db')
     cursor = db.cursor()
@@ -13,7 +19,6 @@ def create_table(reddit_post_data):
 
     try:
 
-        cwd = os.getcwd()
         db, cursor = get_db_and_cursor()
 
         print('test')
@@ -57,7 +62,7 @@ def create_table(reddit_post_data):
 
 def display_table():
 
-    db, cursor = get_db_and_cursor()
+    cursor = get_cursor()
 
     cursor.execute('SELECT * FROM posts')
 
