@@ -115,7 +115,7 @@ def write_new_table(reddit_post_data):
     db, cursor = get_db_and_cursor()
 
     for single_post_data in reddit_post_data:
-        cursor.execute('INSERT INTO posts VALUES (?,?,?,?,?,?,?,?)', reddit_post_data)
+        cursor.execute('INSERT INTO posts VALUES (?,?,?,?,?,?,?,?)', single_post_data)
 
     db.commit()
     db.close()

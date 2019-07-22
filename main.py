@@ -5,8 +5,6 @@ import requests.auth
 import sys
 import time
 
-
-
 def get_token(client_id, client_secret, username, password):
     client_auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
     post_data = {'grant_type' : 'password', 'username' : username, 'password' : password}
