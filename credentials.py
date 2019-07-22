@@ -31,10 +31,5 @@ def main():
     global password 
     password = credentialItems[3]
 
-# client_id = ''
-# client_secret = ''
-# username = ''
-# password = ''
-
 main()
 
