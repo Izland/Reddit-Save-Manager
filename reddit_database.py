@@ -2,13 +2,19 @@ import sqlite3
 from sqlite3 import Error
 import os
 
+def get_db_and_cursor():
+    db = sqlite3.connect('reddit_data.db')
+    cursor = db.cursor()
+
+    return db, cursor
+
+
 def create_table(reddit_post_data):
 
     try:
 
         cwd = os.getcwd()
-        db = sqlite3.connect(cwd + '\\reddit_data.db')
-        cursor = db.cursor()
+        db, cursor = get_db_and_cursor()
 
         print('test')
         cursor.execute('''
@@ -33,11 +39,11 @@ def create_table(reddit_post_data):
         if cursor.fetchone()[0] != None:
             answer = input('Table has data in it. Are you sure you want to overwrite it? (y/n) ')
             if answer == 'y':
-                write_new_table(reddit_post_data, db, cursor)
+                write_new_table(reddit_post_data)
 
         
         else:
-            write_new_table(reddit_post_data, db, cursor)
+            write_new_table(reddit_post_data)
 
 
 
@@ -51,20 +57,40 @@ def create_table(reddit_post_data):
 
 def display_table():
 
-    db = sqlite3.connect('reddit_data.db')
-    cursor = db.cursor()
+    db, cursor = get_db_and_cursor()
 
     cursor.execute('SELECT * FROM posts')
 
     print(cursor.fetchall())
 
 def search_table():
-    pass
+    search_fields = ('num_id', 'saved_type', 'title', 'link', 'subreddit', 'full_name', 'post_time', 'epoch_time')
+    search_field_query = ''
+    while search_field_query not in search_fields:
+        search_field_query = input('What field are you searching for? ')
+
+        if search_field_query == 'exit':
+            break
+
+        elif search_field_query not in search_fields:
+            print('Data field not in database. Type "exit" to cancel search')
+
+        else:
+            search_query = input('What are you searching for? ')
+
+            db = sqlite3.connect('redd')
+
+ 
+    
+
+        
+
+    
+
 
 def update_table(reddit_post_data):
 
-    db = sqlite3.connect('reddit_data.db')
-    cursor = db.cursor()
+    db, cursor = get_db_and_cursor()
 
     cursor.execute('SELECT full_name FROM posts')
     posts = cursor.fetchall()
@@ -84,7 +110,9 @@ def update_table(reddit_post_data):
     db.commit()
     db.close()
 
-def write_new_table(reddit_post_data, db, cursor):
+def write_new_table(reddit_post_data):
+
+    db, cursor = get_db_and_cursor()
 
     for single_post_data in reddit_post_data:
         cursor.execute('INSERT INTO posts VALUES (?,?,?,?,?,?,?,?)', reddit_post_data)
