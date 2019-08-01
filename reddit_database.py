@@ -14,6 +14,11 @@ def get_db_and_cursor():
 
     return db, cursor
 
+def get_max_num_id():
+    cursor = get_cursor()
+    cursor.execute('SELECT MAX(num_id) FROM posts')
+
+    return cursor.fetchall()[0][0]
 
 def create_table(reddit_post_data):
 
@@ -64,6 +69,20 @@ def display_table():
 
     print(cursor.fetchall())
 
+def delete_duplicates():
+    cursor = get_cursor()
+    cursor.execute('SELECT * FROM posts')
+    posts = cursor.fetchall()
+    post_full_names = [post[5] for post in posts]
+
+    #Removes duplicate entries
+    filtered_post_full_names = set(post_full_names)
+    
+
+    
+    
+
+    
 def search_table():
     search_fields = ('num_id', 'reddit_data_type', 'title', 'reddit_link', 'subreddit', 'full_name', 'post_time', 'epoch_time')
     search_field_query = ''
@@ -87,6 +106,7 @@ def search_table():
 def update_table(reddit_post_data):
 
     db, cursor = get_db_and_cursor()
+    num_id = get_max_num_id() + 1
 
     cursor.execute('SELECT full_name FROM posts')
     posts = cursor.fetchall()
@@ -97,11 +117,14 @@ def update_table(reddit_post_data):
         if reddit_post in posts:
             print('Already in database')
             continue
-        posts_to_add.add(reddit_post)
-        print('New post added! ' + reddit_post[2])
+        reddit_post.insert(0, num_id)
+        num_id +=1
+        reddit_post_tuple = tuple(reddit_post)
+        posts_to_add.add(reddit_post_tuple)
+        print('New post added! ' + reddit_post_tuple[2])
     
     for new_post in posts_to_add:
-        cursor.execute('INSERT INTO posts VALUES (?,?,?,?,?,?,?,?)', new_post)
+        cursor.execute('INSERT INTO posts VALUES (?,?,?,?,?,?,?,?)',  new_post)
 
     db.commit()
     db.close()

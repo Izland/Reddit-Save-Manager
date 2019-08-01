@@ -17,23 +17,22 @@ def get_saved_posts():
     token = get_token(cred.client_id, cred.client_secret, cred.username, cred.password)
     headers = {'Authorization' : 'bearer ' + token, 'User-Agent': 'RedditSavedPostViewer/0.2 by u/blu_shrike'}
     num_posts = 100
-    num_id = 0
     posts = list()
 
     response = requests.get(f'https://oauth.reddit.com/user/{cred.username}/saved.json?limit={num_posts}', headers=headers)
 
-    posts, num_id, after = parse_json(response.json(), posts, num_id)
+    posts, after = parse_json(response.json(), posts)
     
 
     while after != None:
         response = requests.get(f'https://oauth.reddit.com/user/{cred.username}/saved.json?limit={num_posts}&after={after}', headers=headers)
 
-        posts, num_id, after = parse_json(response.json(), posts, num_id)
-        print(num_id,after)
+        posts, after = parse_json(response.json(), posts,)
+        print(after)
 
     return posts
 
-def parse_json(json_data, data_listings, num_id):
+def parse_json(json_data, data_listings):
     
     reddit_url = 'https://www.reddit.com'
 
@@ -60,14 +59,13 @@ def parse_json(json_data, data_listings, num_id):
         #dont forget to havebody = item['data']['body']
         
 
-        post_listing = (num_id, saved_type, title, link, subreddit, full_name, post_time, epoch_time)
+        post_listing = [saved_type, title, link, subreddit, full_name, post_time, epoch_time]
         data_listings.append(post_listing)
-        num_id += 1
 
     after = json_data['data']['after']
 
 
-    return data_listings, num_id, after
+    return data_listings, after
 
 
 def main():
@@ -78,7 +76,8 @@ def main():
         'create' : lambda: reddit_database.create_table(get_saved_posts()),
         'print' : lambda: reddit_database.display_table(),
         'search' : lambda: reddit_database.search_table(),
-        'update' : lambda: reddit_database.update_table(get_saved_posts())
+        'update' : lambda: reddit_database.update_table(get_saved_posts()),
+        'test' : lambda: reddit_database.delete_duplicates()
     }
 
     command = sys.argv[1]
