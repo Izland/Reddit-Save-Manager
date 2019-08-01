@@ -67,8 +67,10 @@ def display_table():
     cursor = get_cursor()
 
     cursor.execute('SELECT * FROM posts')
+    posts = cursor.fetchall()
+    print(posts)
+    print('Amount of rows: ' + str(len(posts)))
 
-    print(cursor.fetchall())
 
 def delete_duplicates():
     db, cursor = get_db_and_cursor()
@@ -130,18 +132,18 @@ def update_table(reddit_post_data):
     num_id = get_max_num_id() + 1
 
     cursor.execute('SELECT full_name FROM posts')
-    posts = cursor.fetchall()
+    posts = {x[0] for x in cursor.fetchall()}
 
     posts_to_add = set()
 
     for reddit_post in reddit_post_data:
-        if reddit_post in posts:
+        if reddit_post[4] in posts:
             continue
         reddit_post.insert(0, num_id)
         num_id +=1
         reddit_post_tuple = tuple(reddit_post)
         posts_to_add.add(reddit_post_tuple)
-        print('New post added! ' + reddit_post_tuple[2])
+        print('New item added! ' + reddit_post_tuple[2])
     
     for new_post in posts_to_add:
         cursor.execute('INSERT INTO posts VALUES (?,?,?,?,?,?,?,?)',  new_post)
