@@ -17,8 +17,9 @@ def get_db_and_cursor():
 def get_max_num_id():
     cursor = get_cursor()
     cursor.execute('SELECT MAX(num_id) FROM posts')
+    max_num_id = cursor.fetchall()[0][0]
 
-    return cursor.fetchall()[0][0]
+    return max_num_id
 
 def create_table(reddit_post_data):
 
@@ -70,14 +71,34 @@ def display_table():
     print(cursor.fetchall())
 
 def delete_duplicates():
-    cursor = get_cursor()
+    db, cursor = get_db_and_cursor()
     cursor.execute('SELECT * FROM posts')
     posts = cursor.fetchall()
-    post_full_names = [post[5] for post in posts]
 
-    #Removes duplicate entries
-    filtered_post_full_names = set(post_full_names)
-    
+    cursor.execute('DELETE FROM posts WHERE rowid NOT IN (SELECT MIN(rowid) FROM posts GROUP BY full_name)')
+    cursor.execute('SELECT * FROM posts')
+    new_posts = cursor.fetchall()
+
+    if len(posts) == len(new_posts):
+        print('No duplicates detected. Database unchanged')
+    else: 
+        print('Success! Duplicates deleted')
+    db.commit()
+
+    #Rewrite numbers
+
+   
+    for x,y in enumerate(posts):
+        values = (x, y[0])
+        cursor.execute('''UPDATE posts
+                          SET num_id = ? 
+                          WHERE num_id = ?''', values)
+
+    db.commit()
+    db.close()
+
+
+
 
     
     
