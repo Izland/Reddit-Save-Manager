@@ -136,7 +136,6 @@ def update_table(reddit_post_data):
 
     for reddit_post in reddit_post_data:
         if reddit_post in posts:
-            print('Already in database')
             continue
         reddit_post.insert(0, num_id)
         num_id +=1
