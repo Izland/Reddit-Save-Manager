@@ -124,7 +124,9 @@ def search_table():
             cursor = get_cursor()
             cursor.execute(f'SELECT * FROM posts WHERE {search_field_query}  LIKE ?', (database_query,))
 
-            print(cursor.fetchall())
+            search_results = cursor.fetchall()
+            print(search_results)
+            print(f'That returned {len(search_results)} results')
 
 def update_table(reddit_post_data):
 
