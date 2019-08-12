@@ -71,7 +71,6 @@ def display_table():
     print(posts)
     print('Amount of rows: ' + str(len(posts)))
 
-
 def delete_duplicates():
     db, cursor = get_db_and_cursor()
     cursor.execute('SELECT * FROM posts')
@@ -99,13 +98,6 @@ def delete_duplicates():
     db.commit()
     db.close()
 
-
-
-
-    
-    
-
-    
 def search_table():
     search_fields = ('num_id', 'reddit_data_type', 'title', 'reddit_link', 'subreddit', 'full_name', 'post_time', 'epoch_time')
     search_field_query = ''

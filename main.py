@@ -56,7 +56,6 @@ def parse_json(json_data, data_listings):
         subreddit = item['data']['subreddit_name_prefixed'].lower()
         post_time = time.ctime(item['data']['created_utc'])
         epoch_time = item['data']['created_utc']
-        #dont forget to havebody = item['data']['body']
         
 
         post_listing = [saved_type, title, link, subreddit, full_name, post_time, epoch_time]
