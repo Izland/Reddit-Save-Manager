@@ -79,8 +79,14 @@ def main():
         'test' : lambda: reddit_database.delete_duplicates()
     }
 
-    command = sys.argv[1]
-    command_list[command]()
+    try:
+        assert len(sys.argv) == 2
+        command = sys.argv[1]
+        command_list[command]()
+
+    except AssertionError:
+        print('Type only ONE command after ./main.py')
+        
 
 
 
